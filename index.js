@@ -18,7 +18,8 @@ const client = new MongoClient(uri, {
     version: ServerApiVersion.v1,
     strict: true,
     deprecationErrors: true,
-  }
+  },
+  tls:true,
 });
 
 async function run() {
@@ -33,16 +34,27 @@ async function run() {
       const post = await postCollection.find().toArray();
       res.send(post);
     });
+    app.get('/user', async(req, res)=>{
+      const user = await userCollection.find().toArray();
+      res.send(user);
+    });
 
     //post
     app.post('/post', async(req, res)=>{
       const post = req.body;
       const result = await postCollection.insertOne(post);
+      //console.log("post api");
+      res.send(result);
+    });
+    app.post('/register', async(req, res)=>{
+      const user = req.body;
+      const result = await userCollection.insertOne(user);
+      //console.log("post api");
       res.send(result);
     });
   } 
   catch(error){
-    console.log(error);
+    console.log("MonogoDb Connection error: " + error);
   }
   // finally {
   //   console.log("connecting to db")
