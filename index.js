@@ -45,6 +45,13 @@ async function run() {
       res.send(user);
     })
 
+    app.get('/userPost', async(req, res) =>{
+      const email = req.query.email;
+      const post = (await postCollection.find({email: email}).toArray()).reverse();
+      res.send(post);
+    })
+
+
    
 
     //post
@@ -59,6 +66,18 @@ async function run() {
       const result = await userCollection.insertOne(user);
       //console.log("post api");
       res.send(result);
+    });
+
+
+    //patch
+    app.patch('/userUpdates/:email', async(req, res) =>{
+      const filter = req.params;
+      const profile = req.body;
+      const options = {upsert: true};
+      const updateDoc = { $set:profile };
+      const result = await userCollection.updateOne(filter, updateDoc, options);
+      res.send(result);
+
     });
   } 
   catch(error){
