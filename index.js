@@ -47,7 +47,9 @@ async function run() {
 
     app.get('/userPost', async(req, res) =>{
       const email = req.query.email;
+      //console.log(req.query);
       const post = (await postCollection.find({email: email}).toArray()).reverse();
+      //console.log(post);
       res.send(post);
     })
 
